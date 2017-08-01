@@ -22,6 +22,7 @@ def load_users():
     for row in open("seed_data/u.user"):
         row = row.rstrip()
         user_id, age, gender, occupation, zipcode = row.split("|")
+        print user_id, age, gender, occupation, zipcode
 
         user = User(user_id=user_id,
                     age=age,
@@ -65,6 +66,7 @@ def load_movies():
 
         imdb_url = movie_info_list[4]
 
+        # instantiate movie object
         movie = Movie(movie_id=movie_id,
                       title=title,
                       released_at=released_at,
@@ -84,7 +86,7 @@ def load_ratings():
 
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate users
-    User.query.delete()
+    Rating.query.delete()
 
     # Read u.user file and insert data
     for row in open("seed_data/u.data"):
