@@ -51,9 +51,16 @@ def process_registration_form():
     user_email = request.form.get("email")
     user_password = request.form.get("password")
 
-    
-
-
+    # Cross match user email with existing emails in User table DB
+    # Check if email in DB. If not, add email to DB. Either way, redirects to homepage.
+    if User.query.filter_by(email=user_email).first():
+        print "email exists!"  # SHOW IN TERMINAL IF EMAIL EXISTS
+        return redirect('/')
+    else:
+        sql = """ INSERT INTO users (email, password) VALUES (:email, :password) """
+        db.session.execute(sql, {'email': user_email, 'password': user_password})
+        db.session.commit()
+        return redirect('/')
 
 
 if __name__ == "__main__":
