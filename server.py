@@ -78,19 +78,27 @@ def authenticate_user():
     user_email = request.form.get("login-email")
     user_password = request.form.get("login-password")
 
+    current_user = User.query.filter((User.email == user_email) & (User.password == user_password)).first()
     # check if email in DB + password matches (w/ same user_id)
-    if User.query.filter((User.email == user_email) & (User.password == user_password)):
-        # add user to session
-        current_user = User.query.filter((User.email == user_email) & (User.password == user_password))
+
+    if current_user:
         session['current_user'] = current_user.user_id
         # flash success message + redirect to homepage
         flash("Logged in as %s" % user_email)
         return redirect("/")
-        
-            # UPDATE BASE.HTML TO INCLUDE POTENTIAL FLASH MESSAGE
-    # if not (email OR pw wrong), don't let form submit. stay on same page + flash error message.
+    else:
+        flash("Invalid")
+        return redirect("/login")
 
 
+@app.route('/logout')
+def logout_user():
+    """ Logs user out. """
+
+    del session['current_user']  # deletes user from session
+    flash("You are logged out!")  # flash success message
+
+    return redirect("/")  # go back to homepage
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

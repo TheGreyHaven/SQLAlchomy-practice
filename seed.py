@@ -22,7 +22,6 @@ def load_users():
     for row in open("seed_data/u.user"):
         row = row.rstrip()
         user_id, age, gender, occupation, zipcode = row.split("|")
-        print user_id, age, gender, occupation, zipcode
 
         user = User(user_id=user_id,
                     age=age,
