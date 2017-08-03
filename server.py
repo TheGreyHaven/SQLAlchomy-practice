@@ -57,8 +57,8 @@ def process_registration_form():
         print "email exists!"  # SHOW IN TERMINAL IF EMAIL EXISTS
         return redirect('/')
     else:
-        sql = """ INSERT INTO users (email, password) VALUES (:email, :password) """
-        db.session.execute(sql, {'email': user_email, 'password': user_password})
+        user = User(email=user_email, password=user_password)
+        db.session.add(user)
         db.session.commit()
         return redirect('/')
 
@@ -99,6 +99,17 @@ def logout_user():
     flash("You are logged out!")  # flash success message
 
     return redirect("/")  # go back to homepage
+
+
+@app.route('/user/<user.user_id>')
+def show_user_profile():
+    """ Displays info about particular user. """
+
+    current_user = User.query.get(user.user_id)  # object
+    user_ratings = current_user.ratings  # list of objects
+
+    render_template("user_profile.html", ratings=user_ratings)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
